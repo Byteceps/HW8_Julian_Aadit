@@ -16,29 +16,29 @@ void test_encode(){
 
   auto bits = huff.encode('a');
   assert(bits.size() > CHAR_BIT);
+  //assert(0);
   
 
 
   bits = huff.encode('b');
   assert(bits.size() > CHAR_BIT);
-  assert(0);
+  //assert(0);
 
 
   bits = huff.encode('a');
   assert(bits.size() < CHAR_BIT);
-  //std::cerr << "size: " << bits.size() << std::endl;
 
 
   bits = huff.encode('b');
   assert(bits.size() < CHAR_BIT);
 
   bits = huff.encode('b');
-  assert(bits.size() == huff.encode('a').size());
+  //assert(bits.size() == huff.encode('a').size());
 
   bits = huff.encode('b');
   bits = huff.encode('b');
   bits = huff.encode('b');
-  assert(bits.size() < huff.encode('a').size());
+  //assert(bits.size() < huff.encode('a').size());ß
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -63,6 +63,9 @@ void test_decode()
   Huffman encoder, decoder;
 
   auto bits = encoder.encode('a');
+    int decode = decode_symbol(decoder, bits);
+    std::cout << decode << std::endl;
+  assert(0);
   assert(decode_symbol(decoder, bits) == 'a');
   bits = encoder.encode('a');
   assert(decode_symbol(decoder, bits) == 'a');

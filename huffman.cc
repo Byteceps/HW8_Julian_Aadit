@@ -12,7 +12,7 @@ Huffman::~Huffman(){};
 HTree::tree_ptr_t Huffman::create_tree(){
     //Initialize forest of 257 HTrees 
     HForest forest = HForest(); 
-    for(int i =97; i < 100; i++){
+    for(int i =0; i < ALPHABET_SIZE; i++){
         HTree::tree_ptr_t tree = std::make_shared<HTree>(i, freqTable[i]);
         forest.HForest::add_tree(tree);
     }   
@@ -42,9 +42,28 @@ return forest.pop_top();
 
 
 //Outputs the keys of an HTree to the console
-void Huffman::view_tree(HTree::tree_ptr_t huff){
+/* void Huffman::view_tree(HTree::tree_ptr_t huff){
     if(huff != nullptr){
       std::cout << huff->get_key() << ":" << huff->get_value() << std::endl;
+    }
+    if(huff->get_child(HTree::Direction::LEFT)){
+      view_tree(huff->get_child(HTree::Direction::LEFT));  
+    }
+    if(huff->get_child(HTree::Direction::RIGHT)){
+      view_tree(huff->get_child(HTree::Direction::RIGHT));
+    }
+    return;
+}
+*/
+void Huffman::view_tree(HTree::tree_ptr_t huff){
+    if(huff != nullptr){
+          std::cout << huff->get_key() << ":" << huff->get_value() << std::endl;
+        if(huff->get_child(HTree::Direction::LEFT)){
+          std::cout << "left child is " << huff->get_child(HTree::Direction::LEFT)->get_key() << std::endl;
+        }
+        if(huff->get_child(HTree::Direction::RIGHT)){
+          std::cout << "right child is " << huff->get_child(HTree::Direction::RIGHT)->get_key() << std::endl;
+        }
     }
     if(huff->get_child(HTree::Direction::LEFT)){
       view_tree(huff->get_child(HTree::Direction::LEFT));  
@@ -57,10 +76,11 @@ void Huffman::view_tree(HTree::tree_ptr_t huff){
 
 void Huffman::view_freq(std::map<int, int> freq){
     if(freq.size() > 0){
-        for(unsigned long i = 0; i < freq.size(); i++){
+        for(unsigned long i = 97; i <= 98; i++){
             std::cout << "frequency of " << i << ": " << freq[i] << std::endl;
         }
     }
+    //std::cout << "********************" <<std::endl;    
     return;
 }
 
@@ -70,7 +90,8 @@ void Huffman::view_bits(bits_t bits){
     for(unsigned long i = 0; i < bits.size(); i++){
         std::cout << bits[i];
     }
-    std::cout <<std::endl;
+    std::cout << std::endl;
+    std::cout << "****************" << std::endl;
 }
 
 
@@ -78,7 +99,7 @@ void Huffman::view_bits(bits_t bits){
 Huffman::bits_t Huffman::encode(int symbol){
     // create tree from scratch
     HTree::tree_ptr_t Huff = Huffman::create_tree();                             
-    view_tree(Huff);
+    //view_tree(Huff);
 
     HTree::possible_path_t directionList = Huff->HTree::path_to(symbol);               
     Huffman::bits_t boolList;          
@@ -96,8 +117,8 @@ Huffman::bits_t Huffman::encode(int symbol){
         
     }
     // increment the frequency of symbol in the frequency table and returns encoded bits
-    Huffman::freqTable.at(symbol)++; 
-    //view_freq(freqTable);                                            
+    freqTable.at(symbol)++; 
+    view_freq(freqTable);                                            
     view_bits(boolList);
     return boolList;                                                            
 }
@@ -105,7 +126,7 @@ Huffman::bits_t Huffman::encode(int symbol){
 int Huffman::decode(bool bit){
     HTree::tree_ptr_t Huff;
     //If lastNode is null, then this is the first bit in the sequence
-    if(!lastNode){
+    if(lastNode == nullptr){
          Huff = create_tree();
     }
     else{
@@ -116,9 +137,11 @@ int Huffman::decode(bool bit){
     if(bit == false){
         next = Huff->get_child(HTree::Direction::LEFT);
     }
-    next = Huff->get_child(HTree::Direction::RIGHT);
-    //If child is not a leaf node (has no children) save it in lastNode and return negative value
-    if (!Huff->get_child(HTree::Direction::LEFT) && !Huff->get_child(HTree::Direction::RIGHT)){
+    if(bit == true){
+        next = Huff->get_child(HTree::Direction::RIGHT);
+    }
+    //If child is not a leaf node (has children) save it in lastNode and return negative value
+    if (next->get_child(HTree::Direction::LEFT) != nullptr || next->get_child(HTree::Direction::RIGHT) != nullptr){
         lastNode = next;
         return -1;
     }

@@ -12,7 +12,7 @@
 static bool
 compare_trees(HForest::tree_t t1, HForest::tree_t t2)
 {
-  return t1->get_value() < t2->get_value();
+  return t1->get_value() >= t2->get_value();
 }
 
 //////////////////////////////////////////////////////////////////////////////
