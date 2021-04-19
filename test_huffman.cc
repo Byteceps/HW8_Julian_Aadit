@@ -63,9 +63,11 @@ void test_decode()
   Huffman encoder, decoder;
 
   auto bits = encoder.encode('a');
+  bits = encoder.encode('a');
+  
     int decode = decode_symbol(decoder, bits);
     std::cout << decode << std::endl;
-  assert(0);
+ 
   assert(decode_symbol(decoder, bits) == 'a');
   bits = encoder.encode('a');
   assert(decode_symbol(decoder, bits) == 'a');

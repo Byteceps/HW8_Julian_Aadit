@@ -34,6 +34,26 @@ class HTree {
   // Return value in current node
   uint64_t get_value() const { return value_; }
 
+  int get_height() const {
+    int left = 0;
+    int right = 0;
+
+    if(left_ != nullptr){
+      left = left_->get_height();
+    }
+    if(right_ != nullptr){
+      right = right_->get_height();
+    }
+    
+    if(left >= right){
+      return left + 1;
+    }
+    else{
+      return right + 1;
+    } 
+  }
+  
+
   // Return the child of this node indicated by dir.
   // If the child is nullptr (current node is a leaf), returns nullptr.
   tree_ptr_t get_child(Direction dir) const

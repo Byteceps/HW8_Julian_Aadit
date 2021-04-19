@@ -16,6 +16,7 @@
 #include <memory>
 #include <queue>
 #include <cassert>
+#include <array>
 
 
 class Huffman {
@@ -44,12 +45,17 @@ class Huffman {
   // Finally, updates the frequency table with this additional symbol.
   int decode(bool bit);
 
+  HTree::tree_ptr_t get_huffman(){
+      return huffPtr;
+  }
+
 
 
   private:
       //std::priority_queue<int, std::vector<int>, std::greater<int> > freqTable;
-      std::map<int, int> freqTable;
-      HTree::tree_ptr_t lastNode;
+      HTree::tree_ptr_t huffPtr;
+      std::array<int, ALPHABET_SIZE> freqTable;
+      HTree::tree_ptr_t lastNode = nullptr;
       HTree::tree_ptr_t create_tree();
       void view_tree(HTree::tree_ptr_t huff);
       void view_bits(bits_t bits);

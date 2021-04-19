@@ -12,7 +12,10 @@
 static bool
 compare_trees(HForest::tree_t t1, HForest::tree_t t2)
 {
-  return t1->get_value() >= t2->get_value();
+  if(t1->get_value() == t2->get_value()){
+    return t1->get_height() > t2->get_height();
+  }
+  return t1->get_value() > t2->get_value();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -23,6 +26,7 @@ HForest::add_tree(tree_t tree)
   trees_.push_back(tree);
   std::push_heap(trees_.begin(), trees_.end(), compare_trees);
 }
+
 
 //////////////////////////////////////////////////////////////////////////////
 // Return the tree with the highest frequency count (and remove it from forest)
