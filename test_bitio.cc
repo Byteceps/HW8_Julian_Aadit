@@ -135,8 +135,8 @@ test_100_bits()
     }
     assert(!bitio.input_bit());
   }
-}
 
+}
 
 //////////////////////////////////////////////////////////////////////////////
 int
@@ -147,6 +147,8 @@ main() {
   test_9_bits();
   test_16_bits();
   test_100_bits();
+
+  std::cout << "Tests successful!" << std::endl;
 
   return 0;
 }

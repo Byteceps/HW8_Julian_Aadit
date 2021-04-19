@@ -2,7 +2,7 @@
 
 
 
-Huffman::Huffman(){};
+Huffman::Huffman(){}
 
 Huffman::~Huffman(){
 }
@@ -13,6 +13,10 @@ Huffman::~Huffman(){
 
 //Builds a Huffman Tree from scratch
 HTree::tree_ptr_t Huffman::create_tree(){
+    //Initialize Freq Table
+    for(int i = 0; i < ALPHABET_SIZE; i++){
+        freqTable[i] = 0;
+    }
     //Initialize forest of 257 HTrees 
     HForest forest;
     for(int i =0; i < ALPHABET_SIZE; i++){
@@ -58,6 +62,8 @@ return forest.pop_top();
     return;
 }
 */
+
+//Outputs rough representation of huffman tree to console
 void Huffman::view_tree(HTree::tree_ptr_t huff){
     if(huff != nullptr){
           std::cout << huff->get_key() << ":" << huff->get_value() << std::endl;
@@ -77,18 +83,18 @@ void Huffman::view_tree(HTree::tree_ptr_t huff){
     return;
 }
 
-void Huffman::view_freq(std::map<int, int> freq){
+//Outputs frequency table to console followed by 
+void Huffman::view_freq(std::array<int, ALPHABET_SIZE> freq){
     if(freq.size() > 0){ 
-        for(unsigned long i = 97; i <= 98; i++){
+        for(unsigned long i = 0; i < freq.size(); i++){
             std::cout << "frequency of " << i << ": " << freqTable[i] << std::endl; 
         }
     }
-    //std::cout << "********************" <<std::endl;    
     return;
 }
 
 
-//Prints the bits of a bits_t bool array
+//Prints the bits of a bits_t bool array, followed by a separator line of asteriks
 void Huffman::view_bits(bits_t bits){
     for(unsigned long i = 0; i < bits.size(); i++){
         std::cout << bits[i];
@@ -98,12 +104,11 @@ void Huffman::view_bits(bits_t bits){
 }
 
 
-//Encodes a symbol using adaptive huffman encoding
+//Encodes a symbol using adaptive huffman encoding, returns encoding as type bits_t (vector of booleans)
 Huffman::bits_t Huffman::encode(int symbol){
     // create tree from scratch
     HTree::tree_ptr_t Huff = create_tree();                             
-    //view_tree(Huff);
-    //huffPtr = Huff;
+   
     HTree::possible_path_t directionList = Huff->HTree::path_to(symbol);               
     Huffman::bits_t boolList;          
 
@@ -120,16 +125,16 @@ Huffman::bits_t Huffman::encode(int symbol){
             boolList.push_back(true);        
         }
     }
-    // increment the frequency of symbol in the frequency table and returns encoded bits
+    // increment the frequency of symbol in the frequency table and return encoded bits
     freqTable.at(symbol)++;
-    //view_freq(freqRef); 
     std::cout << "Encoding of " << char(symbol) << ": ";                                        
     view_bits(boolList);
-    //std::cout << "Key: " << Huff->get_child(HTree::Direction::RIGHT)->get_key() << std::endl;
-    //std::cout << "Value: " << Huff->get_child(HTree::Direction::RIGHT)->get_value() << std::endl;
     return boolList;                                                            
 }
 
+// Decodes a symbol using adaptive huffman encoding. Decoding is done one bit at a time
+// lastNode is set to nullptr at end of bit sequence, which indicates the start of a new bit sequence
+// the next time decode is called
 int Huffman::decode(bool bit){
     HTree::tree_ptr_t Huff;
     //If lastNode is null, then this is the first bit in the sequence
@@ -155,8 +160,6 @@ int Huffman::decode(bool bit){
     //Else decrement frequency table for character at leaf, reset lastNode pointer, and return the character
     int key = next->get_key();
     std::cout << "Decoded Key: " << key << std::endl;
-    //std::cout << "Huff Right Child Key: " << Huff->get_child(HTree::Direction::RIGHT)->get_key() << std::endl;
-    //std::cout << "Huff Right Child Value: " << Huff->get_child(HTree::Direction::RIGHT)->get_value() << std::endl;
     freqTable.at(key)++;    
     lastNode = nullptr;
     return key;

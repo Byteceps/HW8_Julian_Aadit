@@ -3,6 +3,7 @@
  * Before reading any bits, ensure your input stream still has valid inputs.
  */
 #include <iostream>
+#include <fstream>
 
 class BitIO {
  public:
@@ -22,4 +23,8 @@ class BitIO {
 
   // Read a single bit (or trailing zero)
   bool input_bit();
+
+  private:
+  std::ostream* output;
+  std::istream* input;
 };
